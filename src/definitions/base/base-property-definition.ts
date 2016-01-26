@@ -10,16 +10,21 @@ export class BasePropertyDefinition implements ITypeExpressionedDefinition, INam
     constructor(typeChecker: TypeChecker, symbol: ts.Symbol) {
         this.fillName(symbol);
         this.fillTypeExpression(typeChecker, symbol);
+        this.fillIsOptional(typeChecker, symbol);
+    }
 
-        this.isOptional = typeChecker.isOptionalProperty(symbol);
+    private fillIsOptional(typeChecker: TypeChecker, symbol: ts.Symbol) {
+        const declaration = typeChecker.getDeclarationFromSymbol(symbol);
+
+        this.isOptional = declaration != null && (declaration as ts.PropertyDeclaration).questionToken != null;
     }
 
     // NamedDefinition
-    fillName: (symbol: ts.Symbol) => void;
     name: string;
+    fillName: (symbol: ts.Symbol) => void;
     // TypeExpressionedDefinition
-    fillTypeExpression: (typeChecker: TypeChecker, symbol: ts.Symbol) => void;
     typeExpression: TypeExpression;
+    fillTypeExpression: (typeChecker: TypeChecker, symbol: ts.Symbol) => void;
 }
 
 applyMixins(BasePropertyDefinition, [NamedDefinition, TypeExpressionedDefinition]);

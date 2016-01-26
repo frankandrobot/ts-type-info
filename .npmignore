@@ -1,4 +1,3 @@
-/node_modules
 /.vscode
 *.js.map
 /obj
@@ -10,3 +9,4 @@
 *.sln
 /coverage
 /.vs
+/ts-type-info.favdoc

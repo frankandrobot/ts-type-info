@@ -1,12 +1,12 @@
 import * as ts from "typescript";
 import {TypeChecker, DefinitionCache, applyMixins} from "./../../utils";
-import {IModuledDefinition, ModuledDefinition} from "./../base";
+import {IModuledDefinition, ModuledDefinition, IBaseNamedDefinition, IExportableDefinition} from "./../base";
 import {NamespaceDefinition} from "./../namespace";
 import {ClassDefinition} from "./../class";
 import {InterfaceDefinition} from "./../interface";
 import {EnumDefinition} from "./../enum";
 import {FunctionDefinition} from "./../function";
-import {VariableDefinition} from "./../general";
+import {VariableDefinition} from "./../variable";
 import {ReExportDefinition} from "./re-export-definition";
 import {ImportDefinition} from "./import-definition";
 
@@ -51,6 +51,7 @@ export class FileDefinition implements IModuledDefinition {
                         exportDefinition
                     )
                 );
+                this.exports.push(exportDefinition);
             }
             else {
                 console.warn(`Not implemented re-export symbol: ${fileReExportSymbol.name}`);
@@ -59,17 +60,18 @@ export class FileDefinition implements IModuledDefinition {
     }
 
     // NamedDefinition
-    fillName: (symbol: ts.Symbol) => void;
     name: string;
+    fillName: (symbol: ts.Symbol) => void;
     // ModuledDefinition
-    fillMembersBySourceFile: (typeChecker: TypeChecker, definitionCache: DefinitionCache, node: ts.SourceFile) => void;
-    fillMembersBySymbol: (typeChecker: TypeChecker, definitionCache: DefinitionCache, symbol: ts.Symbol) => void;
     namespaces: NamespaceDefinition[];
     classes: ClassDefinition[];
     interfaces: InterfaceDefinition[];
     enums: EnumDefinition[];
     functions: FunctionDefinition[];
     variables: VariableDefinition[];
+    exports: (IBaseNamedDefinition & IExportableDefinition)[];
+    fillMembersBySourceFile: (typeChecker: TypeChecker, definitionCache: DefinitionCache, node: ts.SourceFile) => void;
+    fillMembersBySymbol: (typeChecker: TypeChecker, definitionCache: DefinitionCache, symbol: ts.Symbol) => void;
 }
 
 applyMixins(FileDefinition, [ModuledDefinition]);

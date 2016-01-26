@@ -9,7 +9,6 @@ import {Options, CompilerOptions} from "./options";
 export * from "./options";
 export * from "./definitions";
 export * from "./expressions";
-export * from "./scope";
 
 export function getFileInfo(fileNames: string[], options?: Options): FileDefinition[] {
     verifyArray(fileNames);
@@ -32,7 +31,7 @@ export function getFileInfo(fileNames: string[], options?: Options): FileDefinit
             return baseName !== "lib.d.ts" && baseName !== "lib.es6.d.ts";
         })
         .map(file => {
-            typeChecker.setCurrentNode(file);
+            typeChecker.setCurrentSourceFile(file);
 
             return definitionCache.getFileDefinition(file);
         });

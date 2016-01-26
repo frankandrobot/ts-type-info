@@ -1,5 +1,6 @@
 ﻿import {getStringInfo} from "./../../../main";
 import {runFileDefinitionTests} from "./../../test-helpers";
+import {NamespaceDeclarationType} from "./../../../definitions";
 
 describe("namespace tests", () => {
     const code = `
@@ -31,42 +32,73 @@ export namespace MyExportedNamespace {
     runFileDefinitionTests(def, {
         namespaces: [{
             name: "MyNamespace",
+            declarationType: NamespaceDeclarationType.Namespace,
             classes: [
                 { name: "MyModuleClass" },
-                { name: "MyExportedModuleClass", isExported: true }
+                { name: "MyExportedModuleClass", isExported: true, hasExportKeyword: true }
             ],
             enums: [
                 { name: "MyModuleEnum" },
-                { name: "MyExportedModuleEnum", isExported: true }
+                { name: "MyExportedModuleEnum", isExported: true, hasExportKeyword: true }
             ],
             functions: [
                 { name: "myModuleFunction" },
-                { name: "myExportedModuleFunction", isExported: true }
+                { name: "myExportedModuleFunction", isExported: true, hasExportKeyword: true }
             ],
             interfaces: [
                 { name: "MyModuleInterface" },
-                { name: "MyExportedModuleInterface", isExported: true }
+                { name: "MyExportedModuleInterface", isExported: true, hasExportKeyword: true }
             ],
             namespaces: [{
-                name: "MyInnerModule"
+                name: "MyInnerModule",
+                declarationType: NamespaceDeclarationType.Module
             }, {
                 name: "MyInnerExportedModule",
+                declarationType: NamespaceDeclarationType.Module,
                 isExported: true,
+                hasExportKeyword: true,
                 classes: [
-                    { name: "MyInnerModuleClass", isExported: true }
-                ]
+                    { name: "MyInnerModuleClass", isExported: true, hasExportKeyword: true }
+                ],
+                exports: [{
+                    name: "MyInnerModuleClass"
+                }]
             }, {
-                name: "MyInnerNamespace"
+                name: "MyInnerNamespace",
+                declarationType: NamespaceDeclarationType.Namespace
             }, {
                 name: "MyInnerExportedNamespace",
+                declarationType: NamespaceDeclarationType.Namespace,
                 isExported: true,
+                hasExportKeyword: true,
                 classes: [
-                    { name: "MyInnerNamespaceClass", isExported: true }
-                ]
+                    { name: "MyInnerNamespaceClass", isExported: true, hasExportKeyword: true }
+                ],
+                exports: [{
+                    name: "MyInnerNamespaceClass"
+                }]
+            }],
+            exports: [{
+                name: "MyExportedModuleClass"
+            }, {
+                name: "MyExportedModuleEnum"
+            }, {
+                name: "myExportedModuleFunction"
+            }, {
+                name: "MyExportedModuleInterface"
+            }, {
+                name: "MyInnerExportedModule"
+            }, {
+                name: "MyInnerExportedNamespace"
             }]
         }, {
             name: "MyExportedNamespace",
-            isExported: true
+            declarationType: NamespaceDeclarationType.Namespace,
+            isExported: true,
+            hasExportKeyword: true
+        }],
+        exports: [{
+            name: "MyExportedNamespace"
         }]
     });
 });

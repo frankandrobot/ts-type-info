@@ -1,6 +1,6 @@
 ﻿import * as ts from "typescript";
 import {applyMixins, TypeChecker} from "./../../utils";
-import {INamedDefinition, NamedDefinition, IExportableDefinition, ExportableDefinition,
+import {INamedDefinition, NamedDefinition, IExportableDefinition, ExportableDefinition, IAmbientableDefinition, AmbientableDefinition,
         ITypeParameteredDefinition, TypeParameteredDefinition} from "./../base";
 import {TypeParameterDefinition} from "./../general";
 import {TypeExpression} from "./../../expressions";
@@ -8,7 +8,7 @@ import {InterfaceMethodDefinition} from "./interface-method-definition";
 import {InterfacePropertyDefinition} from "./interface-property-definition";
 import {InterfaceNewSignatureDefinition} from "./interface-new-signature-definition";
 
-export class InterfaceDefinition implements INamedDefinition, IExportableDefinition, ITypeParameteredDefinition {
+export class InterfaceDefinition implements INamedDefinition, IExportableDefinition, ITypeParameteredDefinition, IAmbientableDefinition {
     methods: InterfaceMethodDefinition[] = [];
     newSignatures: InterfaceNewSignatureDefinition[] = [];
     properties: InterfacePropertyDefinition[] = [];
@@ -16,8 +16,9 @@ export class InterfaceDefinition implements INamedDefinition, IExportableDefinit
 
     constructor(typeChecker: TypeChecker, symbol: ts.Symbol, public extendsTypeExpressions: TypeExpression[]) {
         this.fillName(symbol);
-        this.fillIsExported(typeChecker, symbol);
+        this.fillExportable(typeChecker, symbol);
         this.fillMembers(typeChecker, symbol);
+        this.fillAmbientable(typeChecker, symbol);
     }
 
     private fillMembers(typeChecker: TypeChecker, symbol: ts.Symbol) {
@@ -46,14 +47,19 @@ export class InterfaceDefinition implements INamedDefinition, IExportableDefinit
     }
 
     // NamedDefinition
-    fillName: (symbol: ts.Symbol) => void;
     name: string;
+    fillName: (symbol: ts.Symbol) => void;
     // ExportableDefinition
-    fillIsExported: (typeChecker: TypeChecker, symbol: ts.Symbol) => void;
     isExported: boolean;
+    hasExportKeyword: boolean;
+    fillExportable: (typeChecker: TypeChecker, symbol: ts.Symbol) => void;
     // TypeParameteredDefinition
     fillTypeParametersBySymbol: (typeChecker: TypeChecker, symbol: ts.Symbol) => void;
     fillTypeParametersBySignature: (typeChecker: TypeChecker, signature: ts.Signature) => void;
+    // AmbientableDefinition
+    isAmbient: boolean;
+    hasDeclareKeyword: boolean;
+    fillAmbientable: (typeChecker: TypeChecker, symbol: ts.Symbol) => void;
 }
 
-applyMixins(InterfaceDefinition, [NamedDefinition, ExportableDefinition, TypeParameteredDefinition]);
+applyMixins(InterfaceDefinition, [NamedDefinition, ExportableDefinition, TypeParameteredDefinition, AmbientableDefinition]);

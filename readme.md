@@ -55,7 +55,9 @@ console.log(TsTypeInfo.getFileInfo([ "V:/TestFile.ts" ]));
 	"namespaces": [],
 	"functions": [{
 		"name": "myDecorator",
+		"isAmbient": false,
 		"isExported": false,
+		"hasExportKeyword": false,
 		"typeParameters": [],
 		"parameters": [{
 			"name": "str",
@@ -85,7 +87,10 @@ console.log(TsTypeInfo.getFileInfo([ "V:/TestFile.ts" ]));
 	}],
 	"classes": [{
 		"name": "MyClass",
+		"isAbstract": false,
+		"isAmbient": false,
 		"isExported": true,
+		"hasExportKeyword": true,
 		"typeParameters": [],
 		"extendsTypeExpressions": [],
 		"implementsTypeExpressions": [],
@@ -168,7 +173,10 @@ console.log(TsTypeInfo.getFileInfo([ "V:/TestFile.ts" ]));
 	}],
 	"enums": [],
 	"interfaces": [],
-	"variables": []
+	"variables": [],
+	"exports": [
+		{ name: "MyClass", /* omitted rest of MyClass */ }
+	]
 }
 ```
 ### Real Life Example
